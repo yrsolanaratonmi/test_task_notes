@@ -1,0 +1,19 @@
+:host {
+  width: 75%;
+  padding: 24px;
+}
+
+.actions {
+  display: flex;
+  width: 100%;
+}
+
+.tui-island__footer-button {
+  border-radius: var(--tui-radius-xl);
+  width: 53%;
+}
+
+
+.close {
+  flex-grow: 1;
+}

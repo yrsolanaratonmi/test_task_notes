@@ -1,0 +1,28 @@
+<ng-container *ngIf="!(isEditing$ | async)">
+  <tui-island *tuiLet="note$ | async as note" [textAlign]="'center'">
+    <h3 class="tui-island__title">{{note?.title}}</h3>
+    <p class="tui-island__paragraph">
+      {{note?.description}}
+    </p>
+
+    <p class="tui-island__paragraph">
+      {{note?.created | date : 'medium'}}
+    </p>
+
+    <div class="actions">
+      <button appearance="secondary-destructive" size="m" tuiButton type="button" class="tui-island__footer-button" icon="tuiIconTrash"
+        (click)="remove(note?.id)">
+      </button>
+      <button appearance="secondary" size="m" tuiButton type="button" class="tui-island__footer-button" icon="tuiIconEdit"
+        (click)="edit(note?.id)">
+      </button>
+    </div>
+  </tui-island>
+</ng-container>
+
+
+<ng-container *ngIf="(isEditing$ | async)">
+  <app-note-new>
+    <button tuiButton class="close" icon="tuiIconClose" (click)="closeEdit()" #save></button>
+  </app-note-new>
+</ng-container>

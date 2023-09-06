@@ -1,1 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+@import './css-vars.scss';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+[tuiWrapper][data-appearance='success'] {
+  background: rgb(34, 159, 34);
+  color: #fff;
+}
