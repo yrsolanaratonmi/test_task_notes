@@ -1,9 +1,10 @@
 import { Component, ContentChild, ElementRef, Input } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Note, NotesService} from '../notes.service';
 import {map} from 'rxjs/internal/operators/map';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Observable, filter, switchMap} from 'rxjs';
+import {Store} from '@ngxs/store';
+import {AddNote, EditNote, Note, NotesState} from '../store/notes.state';
 
 @Component({
   selector: 'app-note-new',
@@ -21,9 +22,9 @@ export class NoteNewComponent {
 
   id = this.route.snapshot.params['id'];
 
-  constructor (private notesService: NotesService, private readonly router: Router, private readonly route: ActivatedRoute) {}
+  constructor (private readonly store: Store, private readonly router: Router, private readonly route: ActivatedRoute) {}
 
-  private notes$ = this.notesService.notes$;
+  private notes$ = this.store.select(NotesState)
 
   ngOnInit(): void {
     this.getSingle()
@@ -31,18 +32,22 @@ export class NoteNewComponent {
       map((route: any) => +route.url?.slice(1) || +route.routerEvent?.url?.slice(1)),
       switchMap(routeId => {
         this.id = routeId
-        return this.notesService.getSingleNote(routeId)
+        return this.store.select(NotesState).pipe(
+          map((notes: Array<Note>) => notes.find((note: Note) => note.id === routeId))
+        )
       }),
     ).subscribe(res => {
-      this.noteData.controls.title.setValue(res?.title)
-      this.noteData.controls.description.setValue(res?.description)
+      this.noteData.controls.title.setValue(res?.title as string)
+      this.noteData.controls.description.setValue(res?.description as string)
     })
   }
 
   getSingle () {
-    this.notesService.getSingleNote(+this.id).subscribe(res => {
-      this.noteData.controls.title.setValue(res?.title)
-      this.noteData.controls.description.setValue(res?.description)
+    this.store.select(NotesState).pipe(
+      map((notes: Array<Note>) => notes.find((note: Note) => note.id === +this.id))
+    ).subscribe(res => {
+      this.noteData.controls.title.setValue(res?.title as string)
+      this.noteData.controls.description.setValue(res?.description as string)
     })
   }
 
@@ -57,7 +62,7 @@ export class NoteNewComponent {
     data.title = title
     data.description = description
     data.created = new Date()
-    this.notesService.addNote(data)
+    this.store.dispatch(new AddNote(data))
     this.router.navigate([data.id])
   }
 
@@ -66,8 +71,7 @@ export class NoteNewComponent {
     const id = +this.id
     const created = new Date()
     const data = { id, title, description, created }
-    this.notesService.editNote(data as Note)
+    this.store.dispatch(new EditNote(data as Note))
     this.router.navigate([''])
-
   }
 }

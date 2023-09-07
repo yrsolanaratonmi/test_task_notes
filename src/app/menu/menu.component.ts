@@ -1,5 +1,6 @@
+import { Store } from '@ngxs/store';
 import { Component } from '@angular/core';
-import {NotesService} from '../notes.service';
+import {NotesState} from '../store/notes.state';
 
 @Component({
   selector: 'app-menu',
@@ -7,10 +8,7 @@ import {NotesService} from '../notes.service';
   styleUrls: ['./menu.component.scss'],
 })
 export class MenuComponent {
-  constructor (private readonly notesService: NotesService) {}
+  constructor (private readonly store: Store) {}
 
-  notes$ = this.notesService.getNotes()
-
-  ngOnInit(): void {
-  }
+  notes$ = this.store.select(NotesState)
 }

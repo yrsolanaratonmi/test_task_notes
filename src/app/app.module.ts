@@ -12,6 +12,8 @@ import {TuiActionModule, TuiInputComponent, TuiInputModule, TuiIslandModule, Tui
 import {TuiLetModule} from "@taiga-ui/cdk";
 import { NoteNewComponent } from './note-new/note-new.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {NgxsModule} from "@ngxs/store";
+import {NotesState} from "./store/notes.state";
 
 @NgModule({
   declarations: [
@@ -37,7 +39,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     ReactiveFormsModule,
     TuiTextAreaModule,
     TuiInputModule,
-    TuiTextfieldControllerModule
+    TuiTextfieldControllerModule,
+    NgxsModule.forRoot([NotesState])
 ],
   providers: [],
   bootstrap: [AppComponent]
