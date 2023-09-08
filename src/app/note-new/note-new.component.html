@@ -4,6 +4,15 @@
     <input tuiTextfield/>
   </tui-input>
   <tui-text-area formControlName="description" [expandable]="true" [tuiTextfieldCleaner]="true">Description</tui-text-area>
+
+  <tui-input-files accept="image/*" formControlName="file" (change)="onFileChange()"></tui-input-files>
+
+  <tui-files class="tui-space_top-1">
+    <tui-file *ngIf="!save && noteData.controls.file.value" [file]="noteData.controls.file.value" [showDelete]="noteData.controls.file.value"
+      (removed)="removeFile()"></tui-file>
+  </tui-files>
+  <img *ngIf="noteData.controls.file.value" [src]="file" class="file"/>
+
   <div class="actions">
     <button
       appearance="success"

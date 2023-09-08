@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { MenuComponent } from './menu/menu.component';
 import { NoteViewComponent } from './note-view/note-view.component';
-import {TuiActionModule, TuiInputComponent, TuiInputModule, TuiIslandModule, TuiTextAreaModule} from "@taiga-ui/kit";
+import {TuiActionModule, TuiInputComponent, TuiInputFilesModule, TuiInputModule, TuiIslandModule, TuiTextAreaModule} from "@taiga-ui/kit";
 import {TuiLetModule} from "@taiga-ui/cdk";
 import { NoteNewComponent } from './note-new/note-new.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -40,6 +40,7 @@ import {NotesState} from "./store/notes.state";
     TuiTextAreaModule,
     TuiInputModule,
     TuiTextfieldControllerModule,
+    TuiInputFilesModule,
     NgxsModule.forRoot([NotesState])
 ],
   providers: [],
