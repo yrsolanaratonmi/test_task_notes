@@ -2,6 +2,7 @@ import { Select, Store } from '@ngxs/store';
 import { Component } from '@angular/core';
 import {Note, NotesState} from '../store/notes.state';
 import {Observable} from 'rxjs';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -9,7 +10,14 @@ import {Observable} from 'rxjs';
   styleUrls: ['./menu.component.scss'],
 })
 export class MenuComponent {
-  constructor (private readonly store: Store) {}
+  constructor (private readonly router: Router) {}
 
-  @Select(NotesState) notes$!: Observable<Array<Note>>
+  @Select(NotesState) notes$!: Observable<Array<Note>>;
+
+
+  redirectToEdit(noteId: number, event: Event) {
+    event.preventDefault()
+    event.stopPropagation()
+    this.router.navigate(['edit', noteId])
+  }
 }

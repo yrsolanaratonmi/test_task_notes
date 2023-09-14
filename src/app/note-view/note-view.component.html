@@ -1,4 +1,4 @@
-<ng-container *ngIf="!(isEditing$ | async)">
+<ng-container>
   <tui-island *tuiLet="note$ | async as note" [textAlign]="'center'">
     <h3 class="tui-island__title">{{note?.title}}</h3>
     <p class="tui-island__paragraph">
@@ -20,10 +20,4 @@
       </button>
     </div>
   </tui-island>
-</ng-container>
-
-<ng-container *ngIf="(isEditing$ | async)">
-  <app-note-new (close)="onClose()">
-    <button tuiButton class="close" icon="tuiIconClose" (click)="onClose()" #save></button>
-  </app-note-new>
 </ng-container>

@@ -14,6 +14,8 @@ import { NoteNewComponent } from './note-new/note-new.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgxsModule} from "@ngxs/store";
 import {NotesState} from "./store/notes.state";
+import {NgxsStoragePluginModule} from '@ngxs/storage-plugin';
+import {LOCAL_STORAGE_ENGINE} from '@ngxs/storage-plugin';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,7 @@ import {NotesState} from "./store/notes.state";
     HeaderComponent,
     MenuComponent,
     NoteViewComponent,
-    NoteNewComponent
+    NoteNewComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,7 +43,10 @@ import {NotesState} from "./store/notes.state";
     TuiInputModule,
     TuiTextfieldControllerModule,
     TuiInputFilesModule,
-    NgxsModule.forRoot([NotesState])
+    NgxsModule.forRoot([NotesState]),
+    NgxsStoragePluginModule.forRoot({
+        key: NotesState,
+    })
 ],
   providers: [],
   bootstrap: [AppComponent]

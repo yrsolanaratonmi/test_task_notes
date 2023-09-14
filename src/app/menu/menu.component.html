@@ -6,5 +6,7 @@
 
 <a *ngFor="let note of notes$ | async" tuiAction class="note" [routerLink]="note.id.toString()">
   {{note?.title}}
+  <a (click)="redirectToEdit(note.id, $event)">
     <tui-svg src="tuiIconEdit2Large"></tui-svg>
+  </a>
 </a>

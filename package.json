@@ -21,6 +21,7 @@
     "@angular/router": "^16.1.0",
     "@maskito/angular": "^1.5.1",
     "@maskito/core": "^1.5.1",
+    "@ngxs/storage-plugin": "^3.8.1",
     "@ngxs/store": "^3.8.1",
     "@taiga-ui/addon-commerce": "^3.42.1",
     "@taiga-ui/addon-preview": "^3.42.1",

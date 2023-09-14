@@ -1,33 +1,45 @@
-import { Component, ContentChild, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {map} from 'rxjs/internal/operators/map';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {Observable, filter, switchMap} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Observable, Subject, catchError, takeUntil} from 'rxjs';
 import {Select, Store} from '@ngxs/store';
 import {AddNote, EditNote, Note, NotesState} from '../store/notes.state';
 
 @Component({
   selector: 'app-note-new',
   templateUrl: './note-new.component.html',
-  styleUrls: ['./note-new.component.scss']
+  styleUrls: ['./note-new.component.scss'],
 })
-export class NoteNewComponent {
+export class NoteNewComponent implements OnInit, OnDestroy{
 
-  @ContentChild('save') public save! : ElementRef;
+  @Select(NotesState) notes$!: Observable<Array<Note>>;
 
-  @Select(NotesState) notes$!: Observable<Array<Note>>
+  private readonly destroy$ = new Subject()
 
-  @Output() close = new EventEmitter()
+  _note!: Note;
 
-  public noteData = new FormGroup({
-    title: new FormControl('', Validators.required),
-    description: new FormControl('', Validators.required),
-    file: new FormControl(null)
+  get note () {
+    return this._note;
+  }
+
+  set note (note: Note) {
+    this.noteData.controls.title.setValue(note.title)
+    this.noteData.controls.description.setValue(note.description)
+    this.noteData.controls.fileData.setValue(note.fileData)
+    this.file = note.file
+    this._note = note
+  };
+
+  noteData: FormGroup<{title: FormControl<string>, description: FormControl<string>, fileData: FormControl<null>}> = new FormGroup({
+    title: new FormControl('', Validators.required) as FormControl<string>,
+    description: new FormControl('', Validators.required) as FormControl<string>,
+    fileData: new FormControl(null),
   })
 
-  file: any;
+  file!: File | null;
 
-  id = this.route.snapshot.params['id'];
+  id = +this.route.snapshot.params['id'];
 
   isEditing = this.route.snapshot.routeConfig?.path?.includes('edit')
 
@@ -35,60 +47,47 @@ export class NoteNewComponent {
 
 
   ngOnInit(): void {
-    this.getSingle()
-    this.router.events.pipe(
-      map((route: any) => +route.url?.slice(1) || +route.routerEvent?.url?.slice(1)),
-      switchMap(routeId => {
-        this.id = routeId
-        return this.notes$.pipe(
-          map((notes: Array<Note>) => notes.find((note: Note) => note.id === routeId))
-        )
-      }),
-    ).subscribe(res => {
-      this.noteData.controls.title.setValue(res?.title as string)
-      this.noteData.controls.description.setValue(res?.description as string)
-      this.noteData.controls.file.setValue(res?.file)
-      this.file = res?.file
-    })
+    if (this.isEditing) {
+      this.getSingle()
+    }
   }
 
   getSingle () {
     this.notes$.pipe(
-      map((notes: Array<Note>) => notes.find((note: Note) => note.id === +this.id))
-    ).subscribe(res => {
-      this.noteData.controls.title.setValue(res?.title as string)
-      this.noteData.controls.description.setValue(res?.description as string)
-      this.noteData.controls.file.setValue(res?.file)
-      this.file = res?.file
+      takeUntil(this.destroy$),
+      map((notes: Array<Note>) => notes.find((note: Note) => note.id === this.id) as Note),
+    ).subscribe((res: Note) => {
+      this.note = res
     })
   }
 
   saveNew() {
-    const data: any = {}
+    const data: Partial<Note> = {
+      title: this.noteData.controls.title.value as string,
+      description: this.noteData.controls.description.value as string,
+      fileData: this.noteData.controls.fileData.value
+    }
     this.notes$.pipe(
+      takeUntil(this.destroy$),
       map(notes => {
-        data.id = notes.length ? (notes.at(-1) as any).id  + 1 : 1
+        data.id = notes.length ? (notes.at(-1) as Note).id  + 1 : 1
       })
-    ).subscribe().unsubscribe()
-    const { title, description } = this.noteData.value
-    data.title = title
-    data.description = description
+    ).subscribe()
     data.file = this.file;
     data.created = new Date()
-    this.store.dispatch(new AddNote(data))
+    this.store.dispatch(new AddNote(data as Note))
     this.router.navigate([data.id])
-    this.close.emit()
   }
 
   saveEdit() {
     const {title, description} = this.noteData.value
     const id = +this.id
-    const created = new Date()
+    const created = this.note.created
     const file = this.file
-    const data = { id, title, description, created, file }
+    const fileData = this.noteData.controls.fileData.value
+    const data = { id, title, description, created, file, fileData }
     this.store.dispatch(new EditNote(data as Note))
     this.router.navigate([id])
-    this.close.emit()
   }
 
   onFileChange() {
@@ -98,10 +97,20 @@ export class NoteNewComponent {
       this.file = (event.target as any).result
     };
 
-    reader.readAsDataURL(this.noteData.controls.file.value as any);
+    reader.readAsDataURL(this.noteData.controls.fileData.value as any);
   }
 
   removeFile() {
-    this.noteData.controls.file.setValue(null)
+    this.noteData.controls.fileData.setValue(null)
+    this.file = null
+  }
+
+  onClose() {
+    this.router.navigate([+this.id])
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(null)
+    this.destroy$.complete()
   }
 }

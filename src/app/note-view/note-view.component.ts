@@ -20,18 +20,13 @@ export class NoteViewComponent {
     )),
     )
 
-  isEditing$ = new BehaviorSubject(false)
 
   remove (noteId?: number) {
     this.store.dispatch(new RemoveNote(noteId || 0))
     this.router.navigate([''])
   }
 
-  onClose () {
-    this.isEditing$.next(false)
-  }
-
   edit (noteId?: number) {
-    this.isEditing$.next(true)
+    this.router.navigate(['edit', noteId])
   }
 }

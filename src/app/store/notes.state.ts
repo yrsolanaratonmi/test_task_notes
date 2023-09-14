@@ -6,6 +6,7 @@ export interface Note {
   title: string,
   description: string,
   file: any,
+  fileData: any,
   created: Date
 }
 
