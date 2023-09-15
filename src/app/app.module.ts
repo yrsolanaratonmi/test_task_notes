@@ -14,8 +14,11 @@ import { NoteNewComponent } from './note-new/note-new.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgxsModule} from "@ngxs/store";
 import {NotesState} from "./store/notes.state";
-import {NgxsStoragePluginModule} from '@ngxs/storage-plugin';
+import {NgxsStoragePluginModule, StorageOption} from '@ngxs/storage-plugin';
 import {LOCAL_STORAGE_ENGINE} from '@ngxs/storage-plugin';
+import { NoteEditComponent } from './note-edit/note-edit.component';
+import {NgxsLoggerPluginModule} from '@ngxs/logger-plugin';
+import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin'
 
 @NgModule({
   declarations: [
@@ -24,6 +27,7 @@ import {LOCAL_STORAGE_ENGINE} from '@ngxs/storage-plugin';
     MenuComponent,
     NoteViewComponent,
     NoteNewComponent,
+    NoteEditComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,10 +47,13 @@ import {LOCAL_STORAGE_ENGINE} from '@ngxs/storage-plugin';
     TuiInputModule,
     TuiTextfieldControllerModule,
     TuiInputFilesModule,
+    TuiDialogModule,
     NgxsModule.forRoot([NotesState]),
     NgxsStoragePluginModule.forRoot({
-        key: NotesState,
-    })
+      key: NotesState,
+    }),
+    NgxsLoggerPluginModule.forRoot(),
+    NgxsReduxDevtoolsPluginModule.forRoot(),
 ],
   providers: [],
   bootstrap: [AppComponent]

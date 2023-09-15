@@ -6,7 +6,7 @@ export interface Note {
   title: string,
   description: string,
   file: any,
-  fileData: any,
+  fileData?: File | null,
   created: Date
 }
 
@@ -29,8 +29,8 @@ export class EditNote {
   name: 'notes',
   defaults: []
 })
-@Injectable()
 
+@Injectable()
 export class NotesState {
 
   @Action(AddNote) addNote (ctx: StateContext<Array<Note>>, action: AddNote) {

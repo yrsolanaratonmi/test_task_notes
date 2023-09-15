@@ -1,4 +1,4 @@
-<form (ngSubmit)="isEditing ? saveEdit() : saveNew()" [formGroup]="noteData" class="note">
+<form (ngSubmit)="saveNew()" [formGroup]="noteData" class="note">
   <tui-input formControlName="title" [tuiTextfieldCleaner]="true">
     Title
     <input tuiTextfield />
@@ -9,17 +9,12 @@
 
   <tui-input-files accept="image/*" formControlName="fileData" (change)="onFileChange()"></tui-input-files>
 
-  <tui-files class="tui-space_top-1"  *ngIf="noteData.controls.fileData.value">
-    <tui-file [file]="noteData.controls.fileData.value"
-      [showDelete]="noteData.controls.fileData.value" (removed)="removeFile()"></tui-file>
+  <tui-files class="tui-space_top-1" *ngIf="noteData.controls.fileData.value">
+    <tui-file [file]="noteData.controls.fileData.value" [showDelete]="noteData.controls.fileData.value"
+      (removed)="removeFile()"></tui-file>
   </tui-files>
   <img [src]="file" class="file" />
 
-  <div class="actions">
-    <button appearance="success" tuiButton type="submit" [style.flex-grow]="isEditing ? 0.5 : 1" icon="tuiIconCheckLarge"
-      [disabled]="this.noteData.invalid">
-    </button>
-    <button tuiButton *ngIf="isEditing" class="close" icon="tuiIconClose" (click)="onClose()"></button>
-
-  </div>
+  <button appearance="success" tuiButton type="submit" icon="tuiIconCheckLarge" [disabled]="this.noteData.invalid">
+  </button>
 </form>
