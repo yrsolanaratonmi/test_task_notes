@@ -27,22 +27,26 @@ export class NoteNewComponent implements OnDestroy{
 
   file!: File | null;
 
-  constructor (private readonly store: Store, private readonly router: Router, private readonly route: ActivatedRoute) {}
+  constructor (private readonly store: Store, private readonly router: Router) {}
 
   saveNew() {
-    const data: Partial<Note> = {
-      title: this.noteData.controls.title.value as string,
-      description: this.noteData.controls.description.value as string,
-      fileData: this.noteData.controls.fileData.value
-    }
+    let id: number = 0;
     this.notes$.pipe(
       takeUntil(this.destroy$),
       map(notes => {
-        data.id = notes.length ? (notes.at(-1) as Note).id  + 1 : 1
+        id = notes.length ? (notes.at(-1) as Note).id + 1 : 1
       })
     ).subscribe()
+
+    const data: Note = {
+      id,
+      title: this.noteData.controls.title.value as string,
+      description: this.noteData.controls.description.value as string,
+      fileData: this.noteData.controls.fileData.value,
+      created: new Date()
+    }
+    console.warn(data)
     data.file = this.file;
-    data.created = new Date()
     this.store.dispatch(new AddNote(data as Note))
     this.router.navigate([data.id])
   }

@@ -5,7 +5,7 @@ export interface Note {
   id: number,
   title: string,
   description: string,
-  file: any,
+  file?: any,
   fileData?: File | null,
   created: Date
 }
