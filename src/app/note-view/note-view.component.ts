@@ -50,7 +50,6 @@ export class NoteViewComponent {
   }
 
   edit(note: Note) {
-    console.warn(note)
     this.dialog.open(new PolymorpheusComponent(NoteEditComponent, this.injector), {
       data: note,
       size: 'l',

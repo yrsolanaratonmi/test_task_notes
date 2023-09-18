@@ -68,4 +68,8 @@ export class NoteEditComponent {
   onClose () {
     this.context.completeWith(this.note)
   }
+
+  ngOnDestroy(): void {
+    this.context.completeWith(this.note)
+  }
 }
