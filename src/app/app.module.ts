@@ -18,7 +18,8 @@ import {NgxsStoragePluginModule, StorageOption} from '@ngxs/storage-plugin';
 import {LOCAL_STORAGE_ENGINE} from '@ngxs/storage-plugin';
 import { NoteEditComponent } from './note-edit/note-edit.component';
 import {NgxsLoggerPluginModule} from '@ngxs/logger-plugin';
-import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin'
+import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
+import { NoNoteChosenComponent } from './no-note-chosen/no-note-chosen.component'
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin'
     NoteViewComponent,
     NoteNewComponent,
     NoteEditComponent,
+    NoNoteChosenComponent,
   ],
   imports: [
     BrowserModule,

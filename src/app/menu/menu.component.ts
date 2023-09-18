@@ -18,6 +18,7 @@ export class MenuComponent {
   redirectToEdit(noteId: number, event: Event) {
     event.preventDefault()
     event.stopPropagation()
-    this.router.navigate(['edit', noteId])
+    const params = {openModal: 'true'}
+    this.router.navigate([noteId], {queryParams: params})
   }
 }

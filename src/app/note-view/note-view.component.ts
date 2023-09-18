@@ -1,6 +1,6 @@
-import {Component, Inject, Injector, Input, inject} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {BehaviorSubject, Observable, switchMap, tap} from 'rxjs';
+import {Component, Inject, Injector} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Observable, Subject, combineLatest, forkJoin, switchMap, takeUntil, tap} from 'rxjs';
 import {map} from 'rxjs/internal/operators/map';
 import {Store} from '@ngxs/store';
 import {Note, NotesState, RemoveNote} from '../store/notes.state';
@@ -18,14 +18,29 @@ export class NoteViewComponent {
   constructor(
     private router: Router,
     private readonly store: Store,
+    private readonly route: ActivatedRoute,
     @Inject(TuiDialogService) private readonly dialog: TuiDialogService,
     @Inject(Injector) private readonly injector: Injector
   ) { }
 
-  note$: Observable<Note> = this.router.events.pipe(
-    map((route: any) => +route.url?.slice(1) || +route.routerEvent?.url?.slice(1)),
+
+  destroy$ = new Subject()
+
+  ngOnInit(): void {
+    combineLatest([this.note$, this.route.queryParams]).pipe(
+      takeUntil(this.destroy$),
+    ).subscribe(res => {
+      if (res[1]['openModal']) {
+        this.edit(res[0])
+      }
+    })
+  }
+
+  note$: Observable<Note> = this.route.params.pipe(
+    takeUntil(this.destroy$),
+    map(params => params['id']),
     switchMap(routeId => this.store.select(NotesState).pipe(
-      map((notes: Array<Note>) => notes.find((note: Note) => note.id === routeId) as Note),
+      map((notes: Array<Note>) => notes.find((note: Note) => note.id === +routeId) as Note),
     )),
   )
 
@@ -35,9 +50,15 @@ export class NoteViewComponent {
   }
 
   edit(note: Note) {
+    console.warn(note)
     this.dialog.open(new PolymorpheusComponent(NoteEditComponent, this.injector), {
       data: note,
       size: 'l',
-    }).subscribe(console.warn)
+    }).subscribe()
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(null)
+    this.destroy$.complete()
   }
 }
