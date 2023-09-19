@@ -29,23 +29,25 @@ export class EditNote {
   name: 'notes',
   defaults: []
 })
-
 @Injectable()
 export class NotesState {
 
-  @Action(AddNote) addNote (ctx: StateContext<Array<Note>>, action: AddNote) {
+  @Action(AddNote)
+  addNote (ctx: StateContext<Array<Note>>, action: AddNote) {
     const notes = ctx.getState()
     const newState = [...notes, action.note]
     ctx.setState(newState)
   }
 
-  @Action(RemoveNote) removeNote (ctx: StateContext<Array<Note>>, action: RemoveNote) {
+  @Action(RemoveNote)
+  removeNote (ctx: StateContext<Array<Note>>, action: RemoveNote) {
     const notes = ctx.getState()
     const updatedNotes = notes.filter((note: Note) => note.id !== action.noteId);
     ctx.setState(updatedNotes)
   }
 
-  @Action(EditNote) editNote (ctx: StateContext<Array<Note>>, action: EditNote) {
+  @Action(EditNote)
+  editNote (ctx: StateContext<Array<Note>>, action: EditNote) {
     const notes = ctx.getState()
     const updatedNotes = notes.map((note: Note) =>
       note.id == action.note.id ? action.note : note

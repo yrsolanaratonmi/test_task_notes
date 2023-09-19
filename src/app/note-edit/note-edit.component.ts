@@ -15,7 +15,6 @@ import {Router} from '@angular/router';
 })
 export class NoteEditComponent {
   constructor(
-    @Inject(TuiDialogService) private readonly dialog: TuiDialogService,
     @Inject(POLYMORPHEUS_CONTEXT) private readonly context: TuiDialogContext<Note>,
     private readonly store: Store,
     private readonly router: Router

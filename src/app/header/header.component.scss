@@ -9,6 +9,14 @@
   align-items: center;
   text-decoration: none;
   gap: 1rem;
+  justify-content: space-between;
+
+  .container {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 1rem
+  }
 
   .title {
     font: var(--tui-font-heading-5);

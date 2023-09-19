@@ -1,4 +1,4 @@
-import { TuiRootModule, TuiDialogModule, TuiAlertModule, TuiSvgModule, TuiButtonModule, TuiTextfieldControllerModule } from "@taiga-ui/core";
+import {TuiRootModule, TuiDialogModule, TuiAlertModule, TuiSvgModule, TuiButtonModule, TuiTextfieldControllerModule, TuiThemeNightModule } from "@taiga-ui/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -14,12 +14,12 @@ import { NoteNewComponent } from './note-new/note-new.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgxsModule} from "@ngxs/store";
 import {NotesState} from "./store/notes.state";
-import {NgxsStoragePluginModule, StorageOption} from '@ngxs/storage-plugin';
-import {LOCAL_STORAGE_ENGINE} from '@ngxs/storage-plugin';
+import {NgxsStoragePluginModule} from '@ngxs/storage-plugin';
 import { NoteEditComponent } from './note-edit/note-edit.component';
 import {NgxsLoggerPluginModule} from '@ngxs/logger-plugin';
 import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
 import { NoNoteChosenComponent } from './no-note-chosen/no-note-chosen.component'
+import {DarkModeState} from "./store/darkMode.state";
 
 @NgModule({
   declarations: [
@@ -50,9 +50,10 @@ import { NoNoteChosenComponent } from './no-note-chosen/no-note-chosen.component
     TuiTextfieldControllerModule,
     TuiInputFilesModule,
     TuiDialogModule,
-    NgxsModule.forRoot([NotesState]),
+    TuiThemeNightModule,
+    NgxsModule.forRoot([NotesState, DarkModeState]),
     NgxsStoragePluginModule.forRoot({
-      key: NotesState,
+      key: [NotesState, DarkModeState],
     }),
     NgxsLoggerPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot(),
