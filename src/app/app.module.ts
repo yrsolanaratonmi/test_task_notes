@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { MenuComponent } from './menu/menu.component';
 import { NoteViewComponent } from './note-view/note-view.component';
-import {TuiActionModule, TuiInputComponent, TuiInputFilesModule, TuiInputModule, TuiIslandModule, TuiTextAreaModule} from "@taiga-ui/kit";
+import {TuiActionModule, TuiInputComponent, TuiInputFilesModule, TuiInputModule, TuiIslandModule, TuiMarkerIconModule, TuiTextAreaModule} from "@taiga-ui/kit";
 import {TuiLetModule} from "@taiga-ui/cdk";
 import { NoteNewComponent } from './note-new/note-new.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -51,6 +51,7 @@ import {DarkModeState} from "./store/darkMode.state";
     TuiInputFilesModule,
     TuiDialogModule,
     TuiThemeNightModule,
+    TuiMarkerIconModule,
     NgxsModule.forRoot([NotesState, DarkModeState]),
     NgxsStoragePluginModule.forRoot({
       key: [NotesState, DarkModeState],

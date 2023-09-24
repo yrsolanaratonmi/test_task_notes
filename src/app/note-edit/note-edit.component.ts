@@ -1,11 +1,9 @@
 import { Component, Inject } from '@angular/core';
-import {TuiDialogContext, TuiDialogService} from '@taiga-ui/core';
+import {TuiDialogContext} from '@taiga-ui/core';
 import {POLYMORPHEUS_CONTEXT} from '@tinkoff/ng-polymorpheus';
-import {Observable} from 'rxjs';
 import {EditNote, Note} from '../store/notes.state';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {Store} from '@ngxs/store';
-import {Router} from '@angular/router';
 
 
 @Component({
@@ -17,7 +15,6 @@ export class NoteEditComponent {
   constructor(
     @Inject(POLYMORPHEUS_CONTEXT) private readonly context: TuiDialogContext<Note>,
     private readonly store: Store,
-    private readonly router: Router
   ) {}
 
   noteData: FormGroup<{title: FormControl<string>, description: FormControl<string>, fileData: FormControl<null>}> = new FormGroup({
@@ -35,7 +32,7 @@ export class NoteEditComponent {
     this.noteData.controls.description.setValue((this.context.data as any).description)
     this.noteData.controls.fileData.setValue((this.context.data as any).fileData)
     this.file = (this.context.data as any).file
-    this.note = this.context.data
+    this.note = this.context.data;
   }
 
   saveEdit() {
@@ -56,7 +53,7 @@ export class NoteEditComponent {
       this.file = (event.target as any).result
     };
 
-    reader.readAsDataURL(this.noteData.controls.fileData.value as any);
+    reader.readAsDataURL(this.noteData.controls.fileData.value as any)
   }
 
   removeFile() {
